@@ -8,14 +8,12 @@ ticker = "TCS.NS"
 data = yf.download(ticker, start="2020-01-01", end="2025-01-01")
 
 
-#Calculate Moving Averages
 short_window = 20  #20-day SMA
 long_window = 50   #50-day SMA
 data["SMA_20"] = data["Close"].rolling(window=short_window).mean()
 data["SMA_50"] = data["Close"].rolling(window=long_window).mean()
 
 
-#Generate Buy/Sell Signals
 data["Signal"] = 0  # Default no signal
 data.loc[data["SMA_20"] > data["SMA_50"], "Signal"] = 1  # Buy Signal
 data.loc[data["SMA_20"] < data["SMA_50"], "Signal"] = -1  # Sell Signal
@@ -33,7 +31,7 @@ data["Strategy_Cumulative_Return"] = (1 + data["Strategy_Return"]).cumprod() * i
 data["Buy_and_Hold_Cumulative_Return"] = (1 + data["Daily_Return"]).cumprod() * initial_capital
 
 
-#Plot cumulative returns of both strategies
+#Plot cumulative returns of both
 plt.figure(figsize=(14, 7))
 plt.plot(data["Strategy_Cumulative_Return"], label="SMA Crossover Strategy", color="green")
 plt.plot(data["Buy_and_Hold_Cumulative_Return"], label="Buy-and-Hold", color="blue", linestyle="--")
